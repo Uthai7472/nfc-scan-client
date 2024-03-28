@@ -10,8 +10,8 @@ const App = () => {
         const ndef = new NDEFReader();
 
         ndef.addEventListener('reading', event => {
-          const scannedData = event.message.records[0].data;
-          setScannedData(scannedData);
+          const scanData = event.message.records[0].data;
+          setScannedData(scanData);
 
           // axios.post('/api/nfc', {data: scannedData})
           // .then(res => {
@@ -24,6 +24,7 @@ const App = () => {
 
         // Start reading NFC
         await ndef.scan();
+        alert(scannedData)
       } else {
         console.log('NFC not supported on this device');
       }
