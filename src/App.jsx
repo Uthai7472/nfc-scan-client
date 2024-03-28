@@ -13,13 +13,13 @@ const App = () => {
           const scannedData = event.message.records[0].data;
           setScannedData(scannedData);
 
-          axios.post('/api/nfc', {data: scannedData})
-          .then(res => {
-            console.log(res.data);
-          })
-          .catch(error => {
-            console.error(error);
-          })
+          // axios.post('/api/nfc', {data: scannedData})
+          // .then(res => {
+          //   console.log(res.data);
+          // })
+          // .catch(error => {
+          //   console.error(error);
+          // })
         });
 
         // Start reading NFC
