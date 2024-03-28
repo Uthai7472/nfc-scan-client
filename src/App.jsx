@@ -24,7 +24,7 @@ const App = () => {
 
         // Start reading NFC
         await ndef.scan();
-        alert(scannedData)
+        alert(scanData)
       } else {
         console.log('NFC not supported on this device');
       }
@@ -38,7 +38,7 @@ const App = () => {
     <>
       <h1>NFC Scanner</h1>
       <button onClick={handleScan}>Scan NFC</button>
-      {scannedData && <p>Scanned Data: {scannedData}</p>}
+      <p>Scanned Data: {scannedData}</p>
     </>
   )
 }
