@@ -1,43 +1,43 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 
 const App = () => {
   const [scannedData, setScannedData] = useState('');
 
-  const handleScan = async () => {
-    try {
+  useEffect(() => {
+    const handleScan = async () => {
+      try {
+        if ('NDEFReader' in window) {
+          const ndef = new NDEFReader();
+
+          ndef.addEventListener('reading', event => {
+            const scanData = event.message.records[0].data;
+            setScannedData(scanData);
+          });
+
+          await ndef.scan();
+        } else {
+          console.log('NFC not supported on this device');
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    handleScan();
+
+    return () => {
       if ('NDEFReader' in window) {
         const ndef = new NDEFReader();
-
-        ndef.addEventListener('reading', event => {
-          const scanData = event.message.records[0].data;
-          setScannedData(scanData);
-
-          // axios.post('/api/nfc', {data: scannedData})
-          // .then(res => {
-          //   console.log(res.data);
-          // })
-          // .catch(error => {
-          //   console.error(error);
-          // })
-        });
-
-        // Start reading NFC
-        await ndef.scan();
-        alert(scanData)
-      } else {
-        console.log('NFC not supported on this device');
+        ndef.removeEventListener('reading');
       }
-
-    } catch(err) {
-      console.log(err);
-    }
-  }
+    };
+  }, []);
 
   return (
     <>
       <h1>NFC Scanner</h1>
-      <button onClick={handleScan}>Scan NFC</button>
+      {/* <button onClick={handleScan}>Scan NFC</button> */}
       <p>Scanned Data: {scannedData}</p>
     </>
   )
