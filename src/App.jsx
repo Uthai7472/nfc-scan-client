@@ -16,6 +16,7 @@ const App = () => {
           });
 
           await ndef.scan();
+          await alert(scannedData);
         } else {
           console.log('NFC not supported on this device');
         }
@@ -32,7 +33,7 @@ const App = () => {
         ndef.removeEventListener('reading');
       }
     };
-  }, []);
+  }, [scannedData]);
 
   return (
     <>
