@@ -1,46 +1,45 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
-const App = () => {
-  const [scannedData, setScannedData] = useState('');
+function App() {
+  const [nfcValue, setNfcValue] = useState('');
 
   useEffect(() => {
-    const handleScan = async () => {
-      try {
-        if ('NDEFReader' in window) {
-          const ndef = new NDEFReader();
+    // Check if the Web NFC API is supported by the browser
+    if ('NDEFReader' in window) {
+      // Request permission to access NFC
+      navigator.permissions.query({ name: 'nfc' })
+        .then((permissionStatus) => {
+          if (permissionStatus.state === 'granted') {
+            // Create an instance of the NDEFReader
+            const nfcReader = new NDEFReader();
 
-          ndef.addEventListener('reading', event => {
-            const scanData = event.message.records[0].data;
-            setScannedData(scanData);
-          });
+            // Add event listener for reading NFC tags
+            nfcReader.addEventListener('reading', ({ message }) => {
+              // Extract the NFC value from the message
+              const value = message.records[0].data;
 
-          await ndef.scan();
-        } else {
-          console.log('NFC not supported on this device');
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
+              // Update the state with the NFC value
+              setNfcValue(value);
+            });
 
-    handleScan();
-
-    return () => {
-      if ('NDEFReader' in window) {
-        const ndef = new NDEFReader();
-        ndef.removeEventListener('reading');
-      }
-    };
+            // Start reading NFC tags
+            nfcReader.scan();
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    } else {
+      console.error('Web NFC API is not supported by this browser.');
+    }
   }, []);
 
   return (
-    <>
-      <h1>NFC Scanner</h1>
-      {/* <button onClick={handleScan}>Scan NFC</button> */}
-      <p>Scanned Data: {scannedData}</p>
-    </>
-  )
+    <div>
+      <h1>NFC Reader</h1>
+      <p>NFC Value: {nfcValue}</p>
+    </div>
+  );
 }
 
-export default App
+export default App;
