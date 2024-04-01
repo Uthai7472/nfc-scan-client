@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { saveAs } from 'file-saver';
 
 function App() {
   const [nfcValue, setNfcValue] = useState('');
@@ -20,6 +21,10 @@ function App() {
 
               // Update the state with the NFC value
               setNfcValue(value);
+
+              // Save the NFC value to a .txt file
+              const blob = new Blob([value], { type: 'text/plain;charset=utf-8' });
+              saveAs(blob, 'nfc_value.txt');
             });
 
             // Start reading NFC tags
